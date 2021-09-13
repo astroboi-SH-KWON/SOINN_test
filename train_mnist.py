@@ -9,12 +9,14 @@
 import numpy as np
 from soinn import Soinn
 
-from sklearn.datasets import fetch_mldata
+# from sklearn.datasets import fetch_mldata
+from sklearn.datasets import fetch_openml
 from collections import defaultdict
 
 def prepare_dataset():
     print('load MNIST dataset')
-    mnist = fetch_mldata('MNIST original')
+    # mnist = fetch_mldata('MNIST original')
+    mnist = fetch_openml('mnist_784', version=1)
     mnist['data'] = mnist['data'].astype(np.float32)
     mnist['data'] /= 255
     mnist['target'] = mnist['target'].astype(np.int32)
@@ -75,12 +77,12 @@ if __name__ == '__main__':
     N_TRAIN = 5000
     delete_node_period = 100
     max_edge_age = 30
-    print(dataset['data'].shape)
+    print("dataset['data'].shape :", dataset['data'].shape)
     x_train, y_train, x_test, y_test = split_dataset(dataset, N_TRAIN)
-    print(x_train.shape)
-    print(y_train[0])
-    exit()
-#     dumpfile = 'soinn{0}_{1}_{2}.dump'.format(N_TRAIN, delete_node_period, max_edge_age)
+    print("x_train.shape :", x_train.shape)
+    print("y_train[0] :", y_train[0])
+    # exit()
+    # dumpfile = 'soinn{0}_{1}_{2}.dump'.format(N_TRAIN, delete_node_period, max_edge_age)
     try:
         import joblib
         soinn_i = joblib.load(dumpfile)
@@ -90,6 +92,6 @@ if __name__ == '__main__':
                         max_edge_age=max_edge_age)
         learning(soinn_i, x_train, y_train)
     evaluate(soinn_i, x_test, y_test)
-#     visualise(soinn_i.nodes)
+    visualise(soinn_i.nodes)
     soinn_i.print_info()
 #     soinn_i.save(dumpfile)
